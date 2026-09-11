@@ -3,11 +3,11 @@ from datetime import date
 import plotly.graph_objects as go
 import streamlit as st
 
-from finance_control.db import init_db
+from finance_control.auth import require_auth
 from finance_control.services import projection
 
 st.set_page_config(page_title="Projeções", page_icon="📈", layout="wide")
-init_db()
+require_auth()
 st.title("Projeção de caixa")
 st.caption("A projeção considera os lançamentos previstos cadastrados para cada mês.")
 
@@ -27,4 +27,3 @@ st.plotly_chart(fig, use_container_width=True)
 st.dataframe(df, use_container_width=True, hide_index=True,
              column_config={name: st.column_config.NumberColumn(format="R$ %.2f")
                             for name in ["Receitas", "Despesas", "Saldo acumulado"]})
-

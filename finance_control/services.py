@@ -4,7 +4,9 @@ from datetime import date
 
 import pandas as pd
 
-from finance_control.db import execute, query
+from finance_control.db import (
+    insert_transaction, list_budgets, list_transactions, remove_transaction, save_budget,
+)
 
 CATEGORIES = [
     "Moradia", "Alimentação", "Transporte", "Saúde", "Educação",
@@ -19,25 +21,19 @@ def add_transaction(description: str, amount: float, kind: str, category: str,
         raise ValueError("A descrição é obrigatória.")
     if amount <= 0:
         raise ValueError("O valor deve ser maior que zero.")
-    return execute(
-        """INSERT INTO transactions
-        (description, amount, kind, category, account, occurred_on, status, notes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (description.strip(), amount, kind, category, account,
-         occurred_on.isoformat(), status, notes.strip()),
-    )
+    return insert_transaction({
+        "description": description.strip(), "amount": amount, "kind": kind,
+        "category": category, "account": account,
+        "occurred_on": occurred_on.isoformat(), "status": status, "notes": notes.strip(),
+    })
 
 
-def delete_transaction(transaction_id: int) -> None:
-    execute("DELETE FROM transactions WHERE id = ?", (transaction_id,))
+def delete_transaction(transaction_id: str | int) -> None:
+    remove_transaction(transaction_id)
 
 
 def transactions_for_month(month: str) -> pd.DataFrame:
-    rows = query(
-        "SELECT * FROM transactions WHERE substr(occurred_on, 1, 7) = ? "
-        "ORDER BY occurred_on DESC, id DESC",
-        (month,),
-    )
+    rows = list_transactions(month)
     columns = ["id", "description", "amount", "kind", "category", "account",
                "occurred_on", "status", "notes", "created_at"]
     return pd.DataFrame(rows, columns=columns)
@@ -55,15 +51,11 @@ def monthly_summary(df: pd.DataFrame) -> dict[str, float]:
 
 
 def upsert_budget(month: str, category: str, amount: float) -> None:
-    execute(
-        "INSERT INTO budgets(month, category, amount) VALUES (?, ?, ?) "
-        "ON CONFLICT(month, category) DO UPDATE SET amount = excluded.amount",
-        (month, category, amount),
-    )
+    save_budget(month, category, amount)
 
 
 def budgets_for_month(month: str) -> pd.DataFrame:
-    rows = query("SELECT category, amount FROM budgets WHERE month = ? ORDER BY category", (month,))
+    rows = list_budgets(month)
     return pd.DataFrame(rows, columns=["category", "amount"])
 
 
@@ -98,4 +90,3 @@ def projection(start_month: str, months: int = 12) -> pd.DataFrame:
         items.append({"month": str(period), "Receitas": summary["income"],
                       "Despesas": summary["expense"], "Saldo acumulado": running})
     return pd.DataFrame(items)
-

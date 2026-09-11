@@ -5,11 +5,12 @@ from datetime import date
 import plotly.express as px
 import streamlit as st
 
-from finance_control.db import get_setting, init_db, set_setting
+from finance_control.auth import require_auth
+from finance_control.db import get_setting, set_setting
 from finance_control.services import CATEGORIES, monthly_summary, transactions_for_month
 
 st.set_page_config(page_title="Finance Control", page_icon="💰", layout="wide")
-init_db()
+require_auth()
 
 
 def brl(value: float) -> str:
@@ -79,4 +80,3 @@ else:
     display.columns = ["Data", "Descrição", "Categoria", "Conta", "Status", "Valor"]
     st.dataframe(display, use_container_width=True, hide_index=True,
                  column_config={"Valor": st.column_config.NumberColumn(format="R$ %.2f")})
-

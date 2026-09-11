@@ -2,14 +2,33 @@
 
 Aplicação pessoal para registrar receitas e despesas, acompanhar o orçamento mensal e visualizar projeções de caixa.
 
-## Funcionalidades do MVP
+## Funcionalidades
 
-- Dashboard mensal com receitas, despesas, saldo e comprometimento da renda.
-- Cadastro e exclusão de lançamentos.
-- Status pago, previsto ou atrasado.
-- Orçamento por categoria com comparação entre limite e gasto.
-- Projeção de caixa para até 24 meses.
-- Persistência local em SQLite.
+- Login por e-mail e senha com Supabase Auth.
+- Dados permanentes no PostgreSQL/Supabase.
+- Isolamento por usuário com Row Level Security (RLS).
+- Dashboard, lançamentos, orçamento, projeção de caixa e backup CSV.
+- SQLite opcional exclusivamente para desenvolvimento local.
+
+## Configurar o Supabase
+
+1. Crie um projeto em https://supabase.com.
+2. Abra **SQL Editor**, copie `supabase/migrations/001_initial_schema.sql` e execute.
+3. Em **Authentication > Users**, crie seu usuário por e-mail e senha.
+4. Em **Authentication > Providers > Email**, desative novos cadastros públicos após criar o usuário.
+5. Copie a URL do projeto e a chave **Publishable**. Nunca use `service_role` no app.
+
+## Configurar o Streamlit Cloud
+
+Abra **Settings > Secrets** no app e cadastre:
+
+```toml
+[supabase]
+url = "https://SEU-PROJETO.supabase.co"
+publishable_key = "SUA_CHAVE_PUBLICAVEL"
+```
+
+Salve e reinicie o app. A tela de login aparecerá antes de qualquer dado.
 
 ## Executar localmente
 
@@ -17,10 +36,11 @@ Aplicação pessoal para registrar receitas e despesas, acompanhar o orçamento 
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
 streamlit run app.py
 ```
 
-O banco é criado automaticamente em `data/finance.db`. A pasta `data/` não é enviada ao GitHub.
+Para desenvolvimento SQLite: `FINANCE_LOCAL_MODE=1 streamlit run app.py`.
 
 ## Testes
 
@@ -28,7 +48,10 @@ O banco é criado automaticamente em `data/finance.db`. A pasta `data/` não é 
 pytest
 ```
 
-## Segurança e próximos passos
+## Segurança
 
-O MVP não salva dados financeiros no repositório. Para uso online e sincronização entre dispositivos, a próxima evolução será substituir SQLite por PostgreSQL/Supabase e adicionar autenticação.
+- Segredos e banco local não são versionados.
+- Usuários anônimos não recebem privilégios nas tabelas.
+- Operações são filtradas por `auth.uid() = user_id` no PostgreSQL.
+- O app usa somente a chave publicável e a sessão do usuário, nunca `service_role`.
 
