@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 import streamlit as st
-from supabase import Client, create_client
+from supabase import create_client
 
 from finance_control.db import configure_remote, init_db
 
@@ -18,7 +19,7 @@ def _configuration() -> tuple[str, str]:
     return url or os.getenv("SUPABASE_URL", ""), key or os.getenv("SUPABASE_PUBLISHABLE_KEY", "")
 
 
-def require_auth() -> Client | None:
+def require_auth() -> Any | None:
     if os.getenv("FINANCE_LOCAL_MODE") == "1":
         init_db()
         st.sidebar.caption("Modo local: SQLite")
@@ -56,7 +57,7 @@ def require_auth() -> Client | None:
     return client
 
 
-def _login(client: Client) -> None:
+def _login(client: Any) -> None:
     st.title("Finance Control")
     st.caption("Acesso privado")
     with st.form("login"):
@@ -78,4 +79,3 @@ def _login(client: Client) -> None:
 def _clear_session() -> None:
     st.session_state.pop("access_token", None)
     st.session_state.pop("refresh_token", None)
-
