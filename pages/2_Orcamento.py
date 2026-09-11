@@ -3,11 +3,11 @@ from datetime import date
 import plotly.express as px
 import streamlit as st
 
-from finance_control.db import init_db
+from finance_control.auth import require_auth
 from finance_control.services import CATEGORIES, budget_progress, upsert_budget
 
 st.set_page_config(page_title="Orçamento", page_icon="🎯", layout="wide")
-init_db()
+require_auth()
 st.title("Orçamento por categoria")
 
 selected_date = st.date_input("Mês", date.today().replace(day=1))
@@ -38,4 +38,3 @@ else:
                      "Disponível": st.column_config.NumberColumn(format="R$ %.2f"),
                      "Uso (%)": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.1f%%"),
                  })
-

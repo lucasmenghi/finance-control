@@ -2,13 +2,13 @@ from datetime import date
 
 import streamlit as st
 
-from finance_control.db import init_db
+from finance_control.auth import require_auth
 from finance_control.services import (
     ACCOUNTS, CATEGORIES, add_transaction, delete_transaction, transactions_for_month,
 )
 
 st.set_page_config(page_title="Lançamentos", page_icon="🧾", layout="wide")
-init_db()
+require_auth()
 st.title("Lançamentos")
 
 with st.form("new_transaction", clear_on_submit=True):
@@ -42,10 +42,14 @@ else:
         use_container_width=True, hide_index=True,
         column_config={"amount": st.column_config.NumberColumn("Valor", format="R$ %.2f")},
     )
-    ids = {f"#{row.id} — {row.description}": int(row.id) for row in df.itertuples()}
+    ids = {f"#{row.id} — {row.description}": row.id for row in df.itertuples()}
     selected = st.selectbox("Excluir lançamento", [""] + list(ids))
     if selected and st.button("Excluir", type="secondary"):
         delete_transaction(ids[selected])
         st.success("Lançamento excluído.")
         st.rerun()
 
+    st.download_button(
+        "Baixar backup CSV", df.to_csv(index=False).encode("utf-8"),
+        file_name=f"finance-control-{month}.csv", mime="text/csv",
+    )
