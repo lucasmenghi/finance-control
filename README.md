@@ -15,6 +15,7 @@ Aplicação pessoal para registrar receitas e despesas, acompanhar o orçamento 
 
 1. Crie um projeto em https://supabase.com.
 2. Abra **SQL Editor**, copie `supabase/migrations/001_initial_schema.sql` e execute.
+   Em instalações existentes, execute também as migrações seguintes em ordem numérica.
 3. Em **Authentication > Users**, crie seu usuário por e-mail e senha.
 4. Em **Authentication > Providers > Email**, desative novos cadastros públicos após criar o usuário.
 5. Copie a URL do projeto e a chave **Publishable**. Nunca use `service_role` no app.
