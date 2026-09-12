@@ -11,7 +11,7 @@ from finance_control.services import (
     CATEGORIES, income_commitment, monthly_summary, transactions_for_month,
 )
 
-st.set_page_config(page_title="Finance Control", page_icon="💰", layout="wide")
+st.set_page_config(page_title="Controle Financeiro", page_icon="💰", layout="wide")
 require_auth()
 
 
@@ -19,8 +19,60 @@ def brl(value: float) -> str:
     return f"R$ {value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-st.title("Finance Control")
-st.caption("Seu mês financeiro, sem surpresas.")
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+
+    :root {
+        --executive-black: #111827;
+        --executive-gray: #667085;
+        --executive-light: #F2F4F7;
+        --executive-blue: #1261A0;
+        --executive-blue-dark: #0B3658;
+    }
+    html, body, [class*="css"], [data-testid="stAppViewContainer"] {
+        font-family: "Arial Narrow", Arial, sans-serif;
+        color: var(--executive-black);
+    }
+    h1, h2, h3, [data-testid="stMetricLabel"] {
+        font-family: "Montserrat", Arial, sans-serif !important;
+        letter-spacing: -0.02em;
+    }
+    h1 { font-weight: 700 !important; color: var(--executive-black); }
+    h2, h3 { font-weight: 600 !important; }
+    [data-testid="stMetric"] {
+        background: #FFFFFF;
+        border: 1px solid #D0D5DD;
+        border-top: 4px solid var(--executive-blue);
+        padding: 18px 20px;
+        min-height: 126px;
+    }
+    [data-testid="stMetricLabel"] { color: var(--executive-gray); }
+    [data-testid="stMetricValue"] {
+        color: var(--executive-black);
+        font-family: "Arial Narrow", Arial, sans-serif;
+    }
+    [data-testid="stSidebar"] { background: var(--executive-light); }
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 { color: var(--executive-blue-dark); }
+    .executive-kicker {
+        color: var(--executive-blue);
+        font-family: "Montserrat", Arial, sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+    }
+    .executive-subtitle { color: var(--executive-gray); margin-top: -0.5rem; }
+    </style>
+    <div class="executive-kicker">Visão executiva</div>
+    """,
+    unsafe_allow_html=True,
+)
+st.title("Controle Financeiro")
+st.markdown('<p class="executive-subtitle">Acompanhamento mensal de receitas, despesas e caixa.</p>', unsafe_allow_html=True)
 
 today = date.today()
 default_month = today.strftime("%Y-%m")
@@ -50,28 +102,38 @@ c3.metric("Saldo projetado", brl(summary["balance"]))
 c4.metric("Renda comprometida", f"{commitment:.1f}%")
 
 st.subheader("Visão do mês")
-left, right = st.columns([1.15, 1])
-with left:
-    expenses = df[df["kind"] == "Despesa"] if not df.empty else df
-    if expenses.empty:
-        st.info("Cadastre seus primeiros lançamentos na página **Lançamentos**.")
-    else:
-        by_category = expenses.groupby("category", as_index=False)["amount"].sum()
-        fig = px.bar(by_category.sort_values("amount"), x="amount", y="category",
-                     orientation="h", labels={"amount": "Valor", "category": "Categoria"},
-                     color="amount", color_continuous_scale=["#38bdf8", "#2563eb"])
-        fig.update_layout(coloraxis_showscale=False, margin=dict(l=0, r=10, t=10, b=0), height=360)
-        st.plotly_chart(fig, use_container_width=True)
-
-with right:
-    if expenses.empty:
-        st.info("A distribuição por categoria aparecerá aqui.")
-    else:
-        by_category = expenses.groupby("category", as_index=False)["amount"].sum()
-        fig = px.pie(by_category, values="amount", names="category", hole=.62,
-                     color_discrete_sequence=px.colors.qualitative.Safe)
-        fig.update_layout(margin=dict(l=0, r=0, t=10, b=0), height=360, legend_title_text="")
-        st.plotly_chart(fig, use_container_width=True)
+expenses = df[df["kind"] == "Despesa"] if not df.empty else df
+if expenses.empty:
+    st.info("Cadastre seus primeiros lançamentos na página **Lançamentos**.")
+else:
+    by_category = expenses.groupby("category", as_index=False)["amount"].sum()
+    by_category = by_category.sort_values("amount")
+    by_category["label"] = by_category["amount"].map(brl)
+    fig = px.bar(
+        by_category,
+        x="amount",
+        y="category",
+        orientation="h",
+        text="label",
+        labels={"amount": "Despesas", "category": ""},
+    )
+    fig.update_traces(
+        marker_color="#1261A0",
+        textposition="outside",
+        textfont=dict(family="Arial Narrow, Arial", size=14, color="#111827"),
+        hovertemplate="<b>%{y}</b><br>%{text}<extra></extra>",
+        cliponaxis=False,
+    )
+    fig.update_layout(
+        margin=dict(l=0, r=90, t=16, b=0),
+        height=max(360, len(by_category) * 48),
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
+        font=dict(family="Arial Narrow, Arial", color="#344054"),
+        xaxis=dict(showgrid=True, gridcolor="#EAECF0", zeroline=False, tickprefix="R$ "),
+        yaxis=dict(showgrid=False),
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Últimos lançamentos")
 if df.empty:
