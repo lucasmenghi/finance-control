@@ -1,10 +1,9 @@
 from datetime import date
-import io
 
 import pandas as pd
 import streamlit as st
 
-from finance_control.importer import expand_plan
+from finance_control.importer import expand_plan, read_plan_file
 from finance_control.services import (
     ACCOUNTS, CATEGORIES, add_transaction, delete_transaction, import_transactions, transactions_for_month,
 )
@@ -15,8 +14,8 @@ page_header("Entrada de dados", "Adicione seus Dados", "Importe seu cenário ou 
 st.subheader("Importar planilha")
 st.caption("A importação é vinculada exclusivamente ao usuário conectado e ignora lançamentos idênticos.")
 
-with st.expander("Formato obrigatório do arquivo XLSX", expanded=True):
-    st.markdown("O arquivo deve possuir uma aba chamada **Plano**, com os nomes das colunas exatamente como abaixo.")
+with st.expander("Formato obrigatório do arquivo XLSX ou CSV", expanded=False):
+    st.markdown("No XLSX, os dados devem estar em uma aba chamada **Plano**. No CSV, use a primeira linha como cabeçalho. Em ambos, mantenha os nomes das colunas abaixo.")
     st.markdown("""
 | Coluna | Obrigatória | Formato e valores aceitos |
 |---|---:|---|
@@ -33,10 +32,10 @@ with st.expander("Formato obrigatório do arquivo XLSX", expanded=True):
     """)
     st.info("Cada linha representa um lançamento único ou uma série mensal. A planilha será validada e exibida para revisão antes de salvar.")
 
-uploaded = st.file_uploader("Selecione o XLSX", type=["xlsx"])
+uploaded = st.file_uploader("Selecione o XLSX ou CSV", type=["xlsx", "csv"])
 if uploaded:
     try:
-        plan = pd.read_excel(io.BytesIO(uploaded.getvalue()), sheet_name="Plano")
+        plan = read_plan_file(uploaded.name, uploaded.getvalue())
         rows = expand_plan(plan)
         preview = pd.DataFrame(rows)
         st.success(f"Planilha válida: {len(rows)} lançamentos preparados.")
@@ -49,7 +48,7 @@ if uploaded:
     except (ValueError, KeyError) as exc:
         st.error(str(exc))
     except Exception as exc:
-        st.error("Não foi possível ler a planilha. Confirme a aba e as colunas do modelo. "
+        st.error("Não foi possível ler o arquivo. Confirme a aba, o cabeçalho e as colunas do modelo. "
                  f"Detalhe: {type(exc).__name__}.")
 
 st.divider()

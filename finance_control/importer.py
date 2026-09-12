@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from calendar import monthrange
 from datetime import date
+import io
 
 import pandas as pd
 
@@ -14,6 +15,37 @@ REQUIRED_COLUMNS = {
 OPTIONAL_COLUMNS = {"recorrencia", "data_final", "observacoes"}
 ALLOWED_KINDS = {"Receita", "Despesa"}
 ALLOWED_STATUSES = {"Pago", "Previsto", "Atrasado"}
+
+
+def read_plan_file(filename: str, content: bytes) -> pd.DataFrame:
+    """Read the supported import formats into the same plan structure."""
+    lower_name = filename.lower()
+    if lower_name.endswith(".xlsx"):
+        return pd.read_excel(io.BytesIO(content), sheet_name="Plano")
+    if lower_name.endswith(".csv"):
+        last_error: Exception | None = None
+        for encoding in ("utf-8-sig", "latin-1"):
+            try:
+                return pd.read_csv(io.BytesIO(content), sep=None, engine="python", encoding=encoding)
+            except UnicodeDecodeError as exc:
+                last_error = exc
+        raise ValueError("O CSV deve usar codificação UTF-8 ou Latin-1.") from last_error
+    raise ValueError("Formato não suportado. Envie um arquivo XLSX ou CSV.")
+
+
+def _as_amount(value: object, row_number: int) -> float:
+    if isinstance(value, str):
+        normalized = value.strip().replace("R$", "").replace(" ", "")
+        if "," in normalized:
+            normalized = normalized.replace(".", "").replace(",", ".")
+        value = normalized
+    try:
+        amount = float(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"Linha {row_number}: valor inválido.") from None
+    if amount <= 0:
+        raise ValueError(f"Linha {row_number}: valor deve ser maior que zero.")
+    return amount
 
 
 def _as_date(value: object, field: str, row_number: int) -> date:
@@ -46,12 +78,7 @@ def expand_plan(plan: pd.DataFrame) -> list[dict]:
         description = str(source["descricao"]).strip()
         if not description or description.lower() == "nan":
             raise ValueError(f"Linha {row_number}: descrição é obrigatória.")
-        try:
-            amount = float(source["valor"])
-        except (TypeError, ValueError):
-            raise ValueError(f"Linha {row_number}: valor inválido.") from None
-        if amount <= 0:
-            raise ValueError(f"Linha {row_number}: valor deve ser maior que zero.")
+        amount = _as_amount(source["valor"], row_number)
 
         kind = str(source["tipo"]).strip()
         category = str(source["categoria"]).strip()
