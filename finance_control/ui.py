@@ -30,20 +30,27 @@ def palette(dark_mode: bool | None = None) -> dict[str, str]:
 def apply_theme(dark_mode: bool) -> None:
     c = palette(dark_mode)
     sidebar = "#101720" if dark_mode else "#F2F4F7"
-    field = "#18212C" if dark_mode else "#E7ECF2"
-    field_hover = "#202C39" if dark_mode else "#DDE4EC"
+    field = "#E7ECF2"
+    field_hover = "#DDE4EC"
+    field_text = "#111827"
+    field_muted = "#667085"
     st.markdown(f"""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
         :root {{ --cf-bg:{c['background']}; --cf-surface:{c['surface']}; --cf-text:{c['text']};
           --cf-muted:{c['muted']}; --cf-border:{c['border']}; --cf-blue:{c['blue']}; }}
-        html, body, [class*="css"], [data-testid="stAppViewContainer"], [data-testid="stHeader"] {{
+        html,body,[class*="css"],[data-testid="stAppViewContainer"],[data-testid="stHeader"] {{
           font-family:"Arial Narrow",Arial,sans-serif; color:var(--cf-text); background-color:var(--cf-bg); }}
         [data-testid="stMainBlockContainer"] {{ padding-top:3rem; }}
         h1,h2,h3,[data-testid="stMetricLabel"] {{ font-family:"Montserrat",Arial,sans-serif!important;
           letter-spacing:-.02em; color:var(--cf-text)!important; }}
-        h1 {{ font-weight:700!important; }} h2,h3 {{ font-weight:600!important; }}
-        p,label,[data-testid="stCaptionContainer"] {{ color:var(--cf-muted); }}
+        h1 {{ font-size:2.45rem!important; line-height:1.12!important; font-weight:700!important; }}
+        h2 {{ font-size:1.55rem!important; line-height:1.25!important; font-weight:600!important; }}
+        h3 {{ font-size:1.15rem!important; line-height:1.3!important; font-weight:600!important; }}
+        p,label,small,button,input,textarea,[data-baseweb="select"],
+        [data-testid="stCaptionContainer"],[data-testid="stDataFrame"],[data-testid="stDataEditor"] {{
+          font-family:"Arial Narrow",Arial,sans-serif!important; }}
+        p,[data-testid="stCaptionContainer"] {{ color:var(--cf-muted); }}
         [data-testid="stMetric"] {{ background:var(--cf-surface); border:1px solid var(--cf-border);
           border-top:4px solid var(--cf-blue); padding:18px 20px; min-height:126px; }}
         [data-testid="stMetricLabel"] {{ color:var(--cf-muted)!important; }}
@@ -51,23 +58,27 @@ def apply_theme(dark_mode: bool) -> None:
         [data-testid="stSidebar"] {{ background:{sidebar}; }}
         [data-testid="stSidebar"] * {{ color:var(--cf-text); }}
         [data-testid="stSidebar"] {{ min-width:300px; max-width:300px; }}
-        [data-testid="stSidebar"] label p {{ font-family:"Montserrat",Arial,sans-serif!important;
-          font-size:.86rem!important; font-weight:600!important; line-height:1.35!important;
+        [data-testid="stSidebar"] label p,label p {{ font-family:"Arial Narrow",Arial,sans-serif!important;
+          font-size:.92rem!important; font-weight:600!important; line-height:1.35!important;
           color:var(--cf-text)!important; }}
+        [data-testid="stSidebarNav"] span {{ font-family:"Montserrat",Arial,sans-serif!important;
+          font-size:.9rem!important; font-weight:600!important; }}
         [data-testid="stForm"] {{ background:var(--cf-surface); border-color:var(--cf-border); }}
         [data-baseweb="input"], [data-baseweb="base-input"],
         [data-baseweb="select"] > div, [data-baseweb="textarea"] {{
           background-color:{field}!important; border-color:var(--cf-border)!important;
-          color:var(--cf-text)!important; }}
+          color:{field_text}!important; }}
         [data-baseweb="input"]:hover, [data-baseweb="select"] > div:hover {{
           background-color:{field_hover}!important; }}
         [data-baseweb="input"] input, [data-baseweb="base-input"] input,
         [data-baseweb="textarea"] textarea, [data-baseweb="select"] span {{
-          color:var(--cf-text)!important; -webkit-text-fill-color:var(--cf-text)!important; }}
-        input, input::placeholder {{ color:var(--cf-text)!important;
-          -webkit-text-fill-color:var(--cf-text)!important; opacity:1!important; }}
+          color:{field_text}!important; -webkit-text-fill-color:{field_text}!important; }}
+        input {{ color:{field_text}!important; -webkit-text-fill-color:{field_text}!important;
+          font-size:.94rem!important; opacity:1!important; }}
+        input::placeholder,textarea::placeholder {{ color:{field_muted}!important;
+          -webkit-text-fill-color:{field_muted}!important; opacity:1!important; }}
         [data-baseweb="select"] svg, [data-testid="stNumberInput"] button svg,
-        [data-testid="stDateInput"] svg {{ fill:var(--cf-text)!important; color:var(--cf-text)!important; }}
+          [data-testid="stDateInput"] svg {{ fill:{field_text}!important; color:{field_text}!important; }}
         [data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"] {{
           background-color:var(--cf-surface)!important; color:var(--cf-text)!important; }}
         [role="option"] {{ color:var(--cf-text)!important; }}
@@ -76,6 +87,10 @@ def apply_theme(dark_mode: bool) -> None:
           background-color:{field}!important; border-color:var(--cf-border)!important; }}
         [data-testid="stFileUploaderDropzoneInstructions"] span,
         [data-testid="stFileUploaderDropzoneInstructions"] small {{ color:var(--cf-muted)!important; }}
+        [data-testid="stDataFrame"],[data-testid="stDataEditor"] {{
+          color:var(--cf-text)!important; font-size:.9rem!important; }}
+        [data-testid="stMarkdownContainer"] table {{ font-family:"Arial Narrow",Arial,sans-serif!important;
+          font-size:.92rem; color:var(--cf-text); }}
         button[kind="primary"], button[kind="primary"] p,
         [data-testid="stFormSubmitButton"] button, [data-testid="stFormSubmitButton"] button p {{
           color:#FFFFFF!important; -webkit-text-fill-color:#FFFFFF!important; }}
@@ -86,7 +101,7 @@ def apply_theme(dark_mode: bool) -> None:
         input:disabled, button:disabled {{ opacity:.62!important; }}
         .executive-kicker {{ color:var(--cf-blue); font-family:"Montserrat",Arial,sans-serif;
           font-size:.78rem; font-weight:700; letter-spacing:.12em; margin-bottom:.25rem; text-transform:uppercase; }}
-        .executive-subtitle {{ color:var(--cf-muted); margin-top:-.5rem; }}
+        .executive-subtitle {{ font-family:"Arial Narrow",Arial,sans-serif; color:var(--cf-muted); margin-top:-.5rem; }}
         </style>
     """, unsafe_allow_html=True)
 
