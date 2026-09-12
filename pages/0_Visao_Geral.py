@@ -12,9 +12,26 @@ colors = palette()
 page_header("Visão executiva", "Controle Financeiro", "Acompanhamento mensal de receitas, despesas e caixa.")
 
 today = date.today()
+month_names = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+               "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+
+
+def shift_month(base: date, offset: int) -> date:
+    total = base.year * 12 + base.month - 1 + offset
+    year, month_index = divmod(total, 12)
+    return date(year, month_index + 1, 1)
+
+
+current_month = today.replace(day=1)
+available_months = [shift_month(current_month, offset) for offset in range(-24, 61)]
 with st.sidebar:
     st.header("Período")
-    selected_date = st.date_input("Mês de referência", today.replace(day=1))
+    selected_date = st.selectbox(
+        "Mês de referência",
+        available_months,
+        index=24,
+        format_func=lambda value: f"{month_names[value.month - 1]}/{value.year}",
+    )
     month = selected_date.strftime("%Y-%m")
     st.divider()
     monthly_income = st.number_input("Renda mensal de referência", min_value=0.0,
