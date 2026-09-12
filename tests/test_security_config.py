@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from finance_control.auth import _friendly_auth_error
+
 
 def test_rls_covers_every_table_and_operation():
     sql = Path("supabase/migrations/001_initial_schema.sql").read_text(encoding="utf-8")
@@ -17,3 +19,9 @@ def test_private_files_are_gitignored():
     assert ".streamlit/secrets.toml" in ignored
     assert "data/" in ignored
 
+
+def test_auth_errors_are_safe_and_actionable():
+    error = ValueError("Invalid login credentials")
+    message = _friendly_auth_error(error)
+    assert "Supabase recusou" in message
+    assert "Invalid login credentials" not in message

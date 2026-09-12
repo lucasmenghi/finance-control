@@ -72,10 +72,25 @@ def _login(client: Any) -> None:
             st.session_state["access_token"] = response.session.access_token
             st.session_state["refresh_token"] = response.session.refresh_token
             st.rerun()
-        except Exception:
-            st.error("E-mail ou senha inválidos.")
+        except Exception as exc:
+            st.error(_friendly_auth_error(exc))
 
 
 def _clear_session() -> None:
     st.session_state.pop("access_token", None)
     st.session_state.pop("refresh_token", None)
+
+
+def _friendly_auth_error(exc: Exception) -> str:
+    message = str(exc).lower()
+    if "email not confirmed" in message:
+        return "Seu e-mail existe, mas ainda não foi confirmado no Supabase."
+    if "invalid login credentials" in message:
+        return "O Supabase recusou as credenciais. Confirme a senha ou redefina o usuário no painel."
+    if "email logins are disabled" in message:
+        return "O login por e-mail está desativado nas configurações do Supabase."
+    if any(term in message for term in ("api key", "jwt", "project", "url")):
+        return "A URL ou a chave publicável configurada no Streamlit não corresponde ao projeto."
+    if any(term in message for term in ("timeout", "connection", "network")):
+        return "Não foi possível conectar ao Supabase. Tente novamente em alguns instantes."
+    return f"Falha de autenticação ({type(exc).__name__}). Consulte os logs do aplicativo."
