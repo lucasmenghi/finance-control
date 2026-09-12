@@ -58,7 +58,7 @@ def require_auth() -> Any | None:
 
 
 def _login(client: Any) -> None:
-    st.title("Finance Control")
+    st.title("Controle Financeiro")
     st.caption("Acesso privado")
     with st.form("login"):
         email = st.text_input("E-mail")
