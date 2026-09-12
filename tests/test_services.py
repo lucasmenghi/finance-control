@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from finance_control.services import monthly_summary
+from finance_control.services import income_commitment, monthly_summary
 
 
 def test_monthly_summary_calculates_balance_and_pending():
@@ -21,3 +21,10 @@ def test_monthly_summary_empty():
         "income": 0.0, "expense": 0.0, "pending": 0.0, "balance": 0.0
     }
 
+
+def test_income_commitment_prioritizes_configured_reference_income():
+    assert income_commitment(4000, 8000, 10000) == 50.0
+
+
+def test_income_commitment_falls_back_to_recorded_income_when_reference_is_zero():
+    assert income_commitment(4000, 0, 10000) == 40.0
