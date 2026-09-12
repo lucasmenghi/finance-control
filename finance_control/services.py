@@ -13,10 +13,12 @@ CATEGORIES = [
     "Lazer", "Assinaturas", "Dívidas", "Renda", "Outros",
 ]
 ACCOUNTS = ["Nubank", "PicPay", "Vale-alimentação", "Dinheiro", "Outro"]
+INCOME_TYPES = ["Não se aplica", "Salário", "VA/VR", "13º salário", "Renda extra", "Bônus", "Benefício", "Outros"]
 
 
 def add_transaction(description: str, amount: float, kind: str, category: str,
-                    account: str, occurred_on: date, status: str, notes: str = "") -> int:
+                    account: str, occurred_on: date, status: str, notes: str = "",
+                    income_type: str = "Não se aplica") -> int:
     if not description.strip():
         raise ValueError("A descrição é obrigatória.")
     if amount <= 0:
@@ -25,6 +27,7 @@ def add_transaction(description: str, amount: float, kind: str, category: str,
         "description": description.strip(), "amount": amount, "kind": kind,
         "category": category, "account": account,
         "occurred_on": occurred_on.isoformat(), "status": status, "notes": notes.strip(),
+        "income_type": income_type if kind == "Receita" else "Não se aplica",
     })
 
 
@@ -56,7 +59,7 @@ def delete_transaction(transaction_id: str | int) -> None:
 
 def transactions_for_month(month: str) -> pd.DataFrame:
     rows = list_transactions(month)
-    columns = ["id", "description", "amount", "kind", "category", "account",
+    columns = ["id", "description", "amount", "kind", "category", "account", "income_type",
                "occurred_on", "status", "notes", "created_at"]
     return pd.DataFrame(rows, columns=columns)
 

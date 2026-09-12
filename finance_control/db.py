@@ -49,6 +49,7 @@ def init_db() -> None:
                 occurred_on TEXT NOT NULL,
                 status TEXT NOT NULL DEFAULT 'Pago',
                 notes TEXT NOT NULL DEFAULT '',
+                income_type TEXT NOT NULL DEFAULT 'Não se aplica',
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
             CREATE TABLE IF NOT EXISTS budgets (
@@ -63,6 +64,9 @@ def init_db() -> None:
             );
             """
         )
+        columns = {row["name"] for row in conn.execute("PRAGMA table_info(transactions)").fetchall()}
+        if "income_type" not in columns:
+            conn.execute("ALTER TABLE transactions ADD COLUMN income_type TEXT NOT NULL DEFAULT 'Não se aplica'")
 
 
 def list_transactions(month: str) -> list[dict]:
@@ -90,11 +94,11 @@ def insert_transaction(payload: dict) -> str | int:
     with connection() as conn:
         cursor = conn.execute(
             """INSERT INTO transactions
-            (description, amount, kind, category, account, occurred_on, status, notes)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            (description, amount, kind, category, account, occurred_on, status, notes, income_type)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             tuple(payload[key] for key in (
                 "description", "amount", "kind", "category", "account",
-                "occurred_on", "status", "notes"
+                "occurred_on", "status", "notes", "income_type"
             )),
         )
         return int(cursor.lastrowid)
@@ -163,4 +167,3 @@ def set_setting(key: str, value: str) -> None:
 def _next_month(month: str) -> str:
     year, current = map(int, month.split("-"))
     return f"{year + 1}-01-01" if current == 12 else f"{year}-{current + 1:02d}-01"
-

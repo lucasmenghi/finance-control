@@ -39,3 +39,9 @@ def test_read_csv_detects_semicolon_and_brazilian_amount():
     ).encode("utf-8")
     rows = expand_plan(read_plan_file("plano.csv", content))
     assert rows[0]["amount"] == 2870.0
+
+
+def test_expand_plan_preserves_income_type_for_revenue():
+    row = base_row(descricao="Salário", tipo="Receita", categoria="Renda", tipo_receita="Salário")
+    rows = expand_plan(pd.DataFrame([row]))
+    assert rows[0]["income_type"] == "Salário"

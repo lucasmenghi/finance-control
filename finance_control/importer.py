@@ -6,13 +6,13 @@ import io
 
 import pandas as pd
 
-from finance_control.services import ACCOUNTS, CATEGORIES
+from finance_control.services import ACCOUNTS, CATEGORIES, INCOME_TYPES
 
 
 REQUIRED_COLUMNS = {
     "descricao", "valor", "tipo", "categoria", "conta", "primeira_data", "status"
 }
-OPTIONAL_COLUMNS = {"recorrencia", "data_final", "observacoes"}
+OPTIONAL_COLUMNS = {"recorrencia", "data_final", "observacoes", "tipo_receita"}
 ALLOWED_KINDS = {"Receita", "Despesa"}
 ALLOWED_STATUSES = {"Pago", "Previsto", "Atrasado"}
 
@@ -84,6 +84,10 @@ def expand_plan(plan: pd.DataFrame) -> list[dict]:
         category = str(source["categoria"]).strip()
         account = str(source["conta"]).strip()
         status = str(source["status"]).strip()
+        income_type_raw = source.get("tipo_receita", "Não se aplica")
+        income_type = "Não se aplica" if pd.isna(income_type_raw) else str(income_type_raw).strip()
+        if not income_type:
+            income_type = "Não se aplica"
         if kind not in ALLOWED_KINDS:
             raise ValueError(f"Linha {row_number}: tipo deve ser Receita ou Despesa.")
         if category not in CATEGORIES:
@@ -92,6 +96,8 @@ def expand_plan(plan: pd.DataFrame) -> list[dict]:
             raise ValueError(f"Linha {row_number}: conta desconhecida: {account}.")
         if status not in ALLOWED_STATUSES:
             raise ValueError(f"Linha {row_number}: status inválido: {status}.")
+        if income_type not in INCOME_TYPES:
+            raise ValueError(f"Linha {row_number}: tipo_receita inválido: {income_type}.")
 
         first_date = _as_date(source["primeira_data"], "primeira_data", row_number)
         recurrence = str(source.get("recorrencia", "Única")).strip().lower()
@@ -121,6 +127,7 @@ def expand_plan(plan: pd.DataFrame) -> list[dict]:
             "occurred_on": item_date.isoformat(),
             "status": status,
             "notes": notes,
+            "income_type": income_type if kind == "Receita" else "Não se aplica",
         } for item_date in dates)
     return rows
 
@@ -128,5 +135,5 @@ def expand_plan(plan: pd.DataFrame) -> list[dict]:
 def transaction_signature(row: dict) -> tuple:
     """Fields used to make imports repeatable without duplicating transactions."""
     return tuple(str(row.get(field, "")) for field in (
-        "description", "amount", "kind", "category", "account", "occurred_on", "status", "notes"
+        "description", "amount", "kind", "category", "account", "occurred_on", "status", "notes", "income_type"
     ))

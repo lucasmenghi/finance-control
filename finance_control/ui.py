@@ -7,6 +7,15 @@ def brl(value: float) -> str:
     return f"R$ {value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+def compact_brl(value: float) -> str:
+    absolute = abs(value)
+    if absolute >= 1_000_000:
+        return f"R$ {value / 1_000_000:.1f} mi".replace(".", ",")
+    if absolute >= 1_000:
+        return f"R$ {value / 1_000:.1f} mil".replace(".", ",")
+    return f"R$ {value:.0f}"
+
+
 def palette(dark_mode: bool | None = None) -> dict[str, str]:
     dark = st.session_state.get("dark_mode", False) if dark_mode is None else dark_mode
     if dark:
@@ -41,6 +50,10 @@ def apply_theme(dark_mode: bool) -> None:
         [data-testid="stMetricValue"] {{ color:var(--cf-text); font-family:"Arial Narrow",Arial,sans-serif; }}
         [data-testid="stSidebar"] {{ background:{sidebar}; }}
         [data-testid="stSidebar"] * {{ color:var(--cf-text); }}
+        [data-testid="stSidebar"] {{ min-width:300px; max-width:300px; }}
+        [data-testid="stSidebar"] label p {{ font-family:"Montserrat",Arial,sans-serif!important;
+          font-size:.86rem!important; font-weight:600!important; line-height:1.35!important;
+          color:var(--cf-text)!important; }}
         [data-testid="stForm"] {{ background:var(--cf-surface); border-color:var(--cf-border); }}
         [data-baseweb="input"], [data-baseweb="base-input"],
         [data-baseweb="select"] > div, [data-baseweb="textarea"] {{
@@ -51,6 +64,8 @@ def apply_theme(dark_mode: bool) -> None:
         [data-baseweb="input"] input, [data-baseweb="base-input"] input,
         [data-baseweb="textarea"] textarea, [data-baseweb="select"] span {{
           color:var(--cf-text)!important; -webkit-text-fill-color:var(--cf-text)!important; }}
+        input, input::placeholder {{ color:var(--cf-text)!important;
+          -webkit-text-fill-color:var(--cf-text)!important; opacity:1!important; }}
         [data-baseweb="select"] svg, [data-testid="stNumberInput"] button svg,
         [data-testid="stDateInput"] svg {{ fill:var(--cf-text)!important; color:var(--cf-text)!important; }}
         [data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"] {{
@@ -59,6 +74,8 @@ def apply_theme(dark_mode: bool) -> None:
         [role="option"]:hover {{ background-color:{field_hover}!important; }}
         [data-testid="stFileUploaderDropzone"] {{
           background-color:{field}!important; border-color:var(--cf-border)!important; }}
+        [data-testid="stFileUploaderDropzoneInstructions"] span,
+        [data-testid="stFileUploaderDropzoneInstructions"] small {{ color:var(--cf-muted)!important; }}
         button[kind="primary"], button[kind="primary"] p,
         [data-testid="stFormSubmitButton"] button, [data-testid="stFormSubmitButton"] button p {{
           color:#FFFFFF!important; -webkit-text-fill-color:#FFFFFF!important; }}
