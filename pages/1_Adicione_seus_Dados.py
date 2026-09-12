@@ -5,7 +5,8 @@ import streamlit as st
 
 from finance_control.importer import expand_plan, read_plan_file
 from finance_control.services import (
-    ACCOUNTS, CATEGORIES, add_transaction, delete_transaction, import_transactions, transactions_for_month,
+    ACCOUNTS, CATEGORIES, INCOME_TYPES, add_transaction, delete_transaction,
+    import_transactions, transactions_for_month,
 )
 from finance_control.ui import page_header
 
@@ -26,6 +27,7 @@ with st.expander("Formato obrigatório do arquivo XLSX ou CSV", expanded=False):
 | `conta` | Sim | Nubank, PicPay, Vale-alimentação, Dinheiro ou Outro |
 | `primeira_data` | Sim | Data no formato `DD/MM/AAAA` |
 | `status` | Sim | `Pago`, `Previsto` ou `Atrasado` |
+| `tipo_receita` | Para receitas | Salário, VA/VR, 13º salário, Renda extra, Bônus, Benefício ou Outros |
 | `recorrencia` | Não | `Única` ou `Mensal`; se vazia, será considerada única |
 | `data_final` | Para mensal | Último mês da recorrência, em `DD/MM/AAAA` |
 | `observacoes` | Não | Texto livre |
@@ -63,10 +65,12 @@ with st.form("new_transaction", clear_on_submit=True):
     category = c5.selectbox("Categoria", CATEGORIES)
     account = c6.selectbox("Conta", ACCOUNTS)
     status = c7.selectbox("Status", ["Pago", "Previsto", "Atrasado"])
+    income_type = st.selectbox("Tipo da receita", INCOME_TYPES,
+        help="Para despesas, mantenha Não se aplica.")
     notes = st.text_input("Observações", placeholder="Opcional")
     if st.form_submit_button("Adicionar lançamento", type="primary"):
         try:
-            add_transaction(description, amount, kind, category, account, occurred_on, status, notes)
+            add_transaction(description, amount, kind, category, account, occurred_on, status, notes, income_type)
             st.success("Lançamento adicionado.")
         except ValueError as exc:
             st.error(str(exc))
@@ -79,12 +83,48 @@ df = transactions_for_month(month)
 if df.empty:
     st.info("Nenhum lançamento encontrado.")
 else:
-    st.dataframe(df[["id", "occurred_on", "description", "kind", "category", "account", "status", "amount"]],
-        use_container_width=True, hide_index=True,
-        column_config={"amount": st.column_config.NumberColumn("Valor", format="R$ %.2f")})
-    ids = {f"#{row.id} — {row.description}": row.id for row in df.itertuples()}
-    selected = st.selectbox("Excluir lançamento", [""] + list(ids))
-    if selected and st.button("Excluir", type="secondary"):
-        delete_transaction(ids[selected]); st.success("Lançamento excluído."); st.rerun()
+    f1, f2, f3, f4 = st.columns([2, 1, 1, 1])
+    search = f1.text_input("Buscar", placeholder="Descrição ou observação")
+    kind_filter = f2.multiselect("Tipo", sorted(df["kind"].dropna().unique()))
+    status_filter = f3.multiselect("Status", sorted(df["status"].dropna().unique()))
+    category_filter = f4.multiselect("Categoria", sorted(df["category"].dropna().unique()))
+    filtered = df.copy()
+    if search:
+        mask = (filtered["description"].str.contains(search, case=False, na=False)
+                | filtered["notes"].str.contains(search, case=False, na=False))
+        filtered = filtered[mask]
+    if kind_filter:
+        filtered = filtered[filtered["kind"].isin(kind_filter)]
+    if status_filter:
+        filtered = filtered[filtered["status"].isin(status_filter)]
+    if category_filter:
+        filtered = filtered[filtered["category"].isin(category_filter)]
+
+    editable = filtered[["id", "occurred_on", "description", "kind", "category", "account",
+                         "income_type", "status", "amount"]].copy()
+    editable.insert(0, "delete", False)
+    edited = st.data_editor(editable, use_container_width=True, hide_index=True, disabled=list(editable.columns[1:]),
+        column_config={
+            "delete": st.column_config.CheckboxColumn("🗑️", help="Marque os lançamentos que deseja excluir"),
+            "id": None, "amount": st.column_config.NumberColumn("Valor", format="R$ %.2f"),
+            "occurred_on": "Data", "description": "Descrição", "kind": "Tipo",
+            "category": "Categoria", "account": "Conta", "income_type": "Tipo da receita", "status": "Status",
+        })
+    selected_ids = edited.loc[edited["delete"], "id"].tolist()
+    if selected_ids and st.button(f"Excluir {len(selected_ids)} selecionado(s)", type="secondary"):
+        st.session_state["pending_delete_ids"] = selected_ids
+    pending_ids = st.session_state.get("pending_delete_ids", [])
+    if pending_ids:
+        st.warning(f"Confirme a exclusão permanente de {len(pending_ids)} lançamento(s).")
+        confirm_col, cancel_col, _ = st.columns([1, 1, 3])
+        if confirm_col.button("Confirmar exclusão", type="primary"):
+            for transaction_id in pending_ids:
+                delete_transaction(transaction_id)
+            st.session_state.pop("pending_delete_ids", None)
+            st.success("Lançamentos excluídos.")
+            st.rerun()
+        if cancel_col.button("Cancelar"):
+            st.session_state.pop("pending_delete_ids", None)
+            st.rerun()
     st.download_button("Baixar backup CSV", df.to_csv(index=False).encode("utf-8"),
         file_name=f"controle-financeiro-{month}.csv", mime="text/csv")
