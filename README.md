@@ -7,7 +7,7 @@ Aplicação pessoal para registrar receitas e despesas, acompanhar o orçamento 
 - Login por e-mail e senha com Supabase Auth.
 - Dados permanentes no PostgreSQL/Supabase.
 - Isolamento por usuário com Row Level Security (RLS).
-- Dashboard, lançamentos, orçamento, projeção de caixa e backup CSV.
+- Dashboard, lançamentos, orçamento, projeção de caixa, importação inicial e backup CSV.
 - SQLite opcional exclusivamente para desenvolvimento local.
 
 ## Configurar o Supabase
@@ -54,4 +54,4 @@ pytest
 - Usuários anônimos não recebem privilégios nas tabelas.
 - Operações são filtradas por `auth.uid() = user_id` no PostgreSQL.
 - O app usa somente a chave publicável e a sessão do usuário, nunca `service_role`.
-
+- A importação grava os dados no `user_id` da sessão e ignora lançamentos idênticos em reenvios.
