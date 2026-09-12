@@ -28,6 +28,28 @@ def add_transaction(description: str, amount: float, kind: str, category: str,
     })
 
 
+def import_transactions(rows: list[dict]) -> dict[str, int]:
+    """Import validated transactions, skipping exact matches for safe retries."""
+    from finance_control.importer import transaction_signature
+
+    by_month: dict[str, list[dict]] = {}
+    for row in rows:
+        by_month.setdefault(row["occurred_on"][:7], []).append(row)
+
+    inserted = skipped = 0
+    for month, month_rows in by_month.items():
+        existing = {transaction_signature(row) for row in list_transactions(month)}
+        for row in month_rows:
+            signature = transaction_signature(row)
+            if signature in existing:
+                skipped += 1
+                continue
+            insert_transaction(row)
+            existing.add(signature)
+            inserted += 1
+    return {"inserted": inserted, "skipped": skipped}
+
+
 def delete_transaction(transaction_id: str | int) -> None:
     remove_transaction(transaction_id)
 
