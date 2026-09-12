@@ -72,6 +72,12 @@ def monthly_summary(df: pd.DataFrame) -> dict[str, float]:
             "pending": float(pending), "balance": float(income - expense)}
 
 
+def income_commitment(expense: float, reference_income: float, recorded_income: float) -> float:
+    """Use the configured reference income, falling back to recorded income only when unset."""
+    calculation_base = reference_income if reference_income > 0 else recorded_income
+    return expense / calculation_base * 100 if calculation_base > 0 else 0.0
+
+
 def upsert_budget(month: str, category: str, amount: float) -> None:
     save_budget(month, category, amount)
 
