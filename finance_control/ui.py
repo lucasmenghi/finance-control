@@ -79,6 +79,17 @@ def apply_theme(dark_mode: bool) -> None:
           -webkit-text-fill-color:{field_muted}!important; opacity:1!important; }}
         [data-baseweb="select"] svg, [data-testid="stNumberInput"] button svg,
           [data-testid="stDateInput"] svg {{ fill:{field_text}!important; color:{field_text}!important; }}
+        [data-testid="stDateInput"], [data-testid="stDateInput"] [data-baseweb="input"],
+        [data-testid="stDateInput"] input {{ color-scheme:light!important; }}
+        [data-testid="stDateInput"] input,
+        [data-testid="stDateInput"] input:disabled,
+        [data-testid="stDateInput"] input::-webkit-datetime-edit,
+        [data-testid="stDateInput"] input::-webkit-datetime-edit-fields-wrapper,
+        [data-testid="stDateInput"] input::-webkit-datetime-edit-text,
+        [data-testid="stDateInput"] input::-webkit-datetime-edit-month-field,
+        [data-testid="stDateInput"] input::-webkit-datetime-edit-day-field,
+        [data-testid="stDateInput"] input::-webkit-datetime-edit-year-field {{
+          color:{field_text}!important; -webkit-text-fill-color:{field_text}!important; opacity:1!important; }}
         [data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"] {{
           background-color:var(--cf-surface)!important; color:var(--cf-text)!important; }}
         [role="option"] {{ color:var(--cf-text)!important; }}
@@ -109,4 +120,4 @@ def apply_theme(dark_mode: bool) -> None:
 def page_header(kicker: str, title: str, subtitle: str) -> None:
     st.markdown(f'<div class="executive-kicker">{kicker}</div>', unsafe_allow_html=True)
     st.title(title)
-    st.markdown(f'<p class="executive-subtitle">{subtitle}</p>', unsafe_allow_html=True)
+    st.caption(subtitle.upper())
