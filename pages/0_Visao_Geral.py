@@ -50,7 +50,7 @@ p3.metric("Total disponível", brl(cash_balance + investment_balance))
 st.subheader("Projeção de caixa")
 projection_left, projection_right = st.columns([3, 1])
 with projection_right:
-    months = st.slider("Horizonte da projeção", 3, 24, 12)
+    months = st.slider("Horizonte da projeção", 3, 24, 6)
     st.caption("Considera os lançamentos previstos cadastrados em cada mês.")
 projection_df = projection(month, months)
 with projection_left:
