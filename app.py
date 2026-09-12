@@ -7,7 +7,9 @@ import streamlit as st
 
 from finance_control.auth import require_auth
 from finance_control.db import get_setting, set_setting
-from finance_control.services import CATEGORIES, monthly_summary, transactions_for_month
+from finance_control.services import (
+    CATEGORIES, income_commitment, monthly_summary, transactions_for_month,
+)
 
 st.set_page_config(page_title="Finance Control", page_icon="💰", layout="wide")
 require_auth()
@@ -39,8 +41,7 @@ with st.sidebar:
 
 df = transactions_for_month(month)
 summary = monthly_summary(df)
-reference_income = summary["income"] or monthly_income
-commitment = (summary["expense"] / reference_income * 100) if reference_income else 0
+commitment = income_commitment(summary["expense"], monthly_income, summary["income"])
 
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Receitas", brl(summary["income"]))
