@@ -7,7 +7,8 @@ Aplicação pessoal para registrar receitas e despesas, acompanhar o orçamento 
 - Login por e-mail e senha com Supabase Auth.
 - Dados permanentes no PostgreSQL/Supabase.
 - Isolamento por usuário com Row Level Security (RLS).
-- Dashboard, lançamentos, orçamento, projeção de caixa, importação inicial e backup CSV.
+- Visão geral executiva com projeção de caixa, lançamentos, importação XLSX e backup CSV.
+- Tema claro ou escuro com identidade visual consistente em todas as páginas.
 - SQLite opcional exclusivamente para desenvolvimento local.
 
 ## Configurar o Supabase
