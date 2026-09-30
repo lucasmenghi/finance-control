@@ -1,8 +1,6 @@
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.venv/
-.env
-.streamlit/secrets.toml
-data/
-
+node_modules/
+.env*
+!.env.example
+*.log
+financeiro-homologacao.md
+rotina-homologacao.md

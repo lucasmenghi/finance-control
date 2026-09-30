@@ -1,59 +1,44 @@
-# Finance Control
+# Compasso
 
-Aplicação pessoal para registrar receitas e despesas, acompanhar o orçamento mensal e visualizar projeções de caixa.
+Planejamento pessoal, tarefas, leituras, jogos e finanças em uma interface responsiva.
 
-## Funcionalidades
+## Versão atual
 
-- Login por e-mail e senha com Supabase Auth.
-- Dados permanentes no PostgreSQL/Supabase.
-- Isolamento por usuário com Row Level Security (RLS).
-- Visão geral executiva com projeção de caixa, lançamentos, importação XLSX e backup CSV.
-- Tema claro ou escuro com identidade visual consistente em todas as páginas.
-- SQLite opcional exclusivamente para desenvolvimento local.
+Demonstração navegável com dados fictícios e armazenamento local no navegador. Sem login, servidor de dados, sincronização entre dispositivos ou integração bancária/Google Agenda. Não é ainda a versão para controle financeiro real.
 
-## Configurar o Supabase
+- Hoje, semana e backlog; concluir, reagendar e reduzir tarefas.
+- Leituras e jogos com progresso, situação e sessões planejadas.
+- Receitas, despesas, categoria obrigatória, parcelas e faturas.
+- Gráfico mensal de entradas, saídas e caixa acumulado realizado.
+- Exportação JSON e persistência local. Limpar dados do navegador remove os registros locais.
+- Sem gamificação ou notificações.
 
-1. Crie um projeto em https://supabase.com.
-2. Abra **SQL Editor**, copie `supabase/migrations/001_initial_schema.sql` e execute.
-   Em instalações existentes, execute também as migrações seguintes em ordem numérica.
-3. Em **Authentication > Users**, crie seu usuário por e-mail e senha.
-4. Em **Authentication > Providers > Email**, desative novos cadastros públicos após criar o usuário.
-5. Copie a URL do projeto e a chave **Publishable**. Nunca use `service_role` no app.
+## Executar
 
-## Configurar o Streamlit Cloud
+Requer Node.js 20 ou superior. Não há dependências para instalar.
 
-Abra **Settings > Secrets** no app e cadastre:
-
-```toml
-[supabase]
-url = "https://SEU-PROJETO.supabase.co"
-publishable_key = "SUA_CHAVE_PUBLICAVEL"
+```sh
+npm start
+npm test
 ```
 
-Salve e reinicie o app. A tela de login aparecerá antes de qualquer dado.
+Abra http://127.0.0.1:4173.
 
-## Executar localmente
+## Publicar no GitHub Pages
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
-pip install -r requirements.txt
-cp .streamlit/secrets.toml.example .streamlit/secrets.toml
-streamlit run app.py
-```
+Settings → Pages → Deploy from a branch → main → /docs → Save.
+Os caminhos são relativos para funcionar sob o endereço do repositório, inclusive após renomeação.
+Abra a URL HTTPS fornecida pelo GitHub no Safari e use Compartilhar → Adicionar à Tela de Início. Não há suporte offline nesta versão.
 
-Para desenvolvimento SQLite: `FINANCE_LOCAL_MODE=1 streamlit run app.py`.
+## Organização
 
-## Testes
+- docs/: aplicação estática publicável.
+- finance.test.cjs: testes das regras monetárias e histórico.
+- server.cjs: servidor local, somente loopback.
+- legacy/: versão anterior Streamlit/Supabase preservada para referência.
 
-```bash
-pytest
-```
+## Próximas etapas
 
-## Segurança
+Autenticação, persistência por usuário, homologação privada da carga inicial, edição financeira, regras reais de fechamento/vencimento e integração de agenda com aprovação.
 
-- Segredos e banco local não são versionados.
-- Usuários anônimos não recebem privilégios nas tabelas.
-- Operações são filtradas por `auth.uid() = user_id` no PostgreSQL.
-- O app usa somente a chave publicável e a sessão do usuário, nunca `service_role`.
-- A importação grava os dados no `user_id` da sessão e ignora lançamentos idênticos em reenvios.
+Nenhum dado pessoal do planejamento foi incluído nesta publicação. O saldo inicial e os lançamentos de exemplo são fictícios. Dados digitados pelo visitante ficam no navegador dele.

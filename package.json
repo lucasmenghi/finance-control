@@ -1,0 +1,13 @@
+{
+  "name": "compasso",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Planejamento pessoal e finanças com simplicidade",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node --test finance.test.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
