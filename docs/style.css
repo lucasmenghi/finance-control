@@ -4,3 +4,5 @@
 .chart-wrap{overflow-x:auto;margin-top:20px}.chart-wrap svg{display:block;width:100%;min-width:480px;max-height:360px}.chart-wrap text{font:12px system-ui;fill:#737e73}.chart-legend{display:flex;flex-wrap:wrap;gap:22px;font-size:13px}.chart-legend span{display:flex;align-items:center;gap:8px}.chart-legend i{width:20px;height:3px}.backlog-tabs button[aria-pressed=true]{background:#173f37;color:white}.weekgrid .task-actions{display:flex;flex-wrap:wrap}label[hidden]{display:none}
 
 [hidden]{display:none!important}.account-gate{min-height:100vh;display:grid;place-items:center;padding:24px}.account-gate .panel{width:min(440px,100%);padding:32px}.account-gate .brand{color:#173f37}.account-bar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px;font-size:12px}.account-bar details{position:relative}.account-bar details button{margin:5px}.account-bar #syncStatus{margin-right:auto}#accountMessage{color:#795c28}
+
+.delete-entry{color:#a44830}.delete-entry:hover{background:#fff1ea}#deleteEntryError{color:#a44830}
