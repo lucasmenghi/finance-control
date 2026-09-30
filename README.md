@@ -4,13 +4,13 @@ Planejamento pessoal, tarefas, leituras, jogos e finanças em uma interface resp
 
 ## Versão atual
 
-Demonstração navegável com dados fictícios e armazenamento local no navegador. Sem login, servidor de dados, sincronização entre dispositivos ou integração bancária/Google Agenda. Não é ainda a versão para controle financeiro real.
+Login com Supabase Auth e espaço privado por usuário. Tarefas, leituras, jogos e finanças ficam no banco, com políticas RLS. A demonstração continua disponível separadamente, apenas no navegador, e nunca é importada automaticamente para uma conta. Sem integração bancária ou Google Agenda; regras financeiras ainda em homologação.
 
 - Hoje, semana e backlog; concluir, reagendar e reduzir tarefas.
 - Leituras e jogos com progresso, situação e sessões planejadas.
 - Receitas, despesas, categoria obrigatória, parcelas e faturas.
 - Gráfico mensal de entradas, saídas e caixa acumulado realizado.
-- Exportação JSON e persistência local. Limpar dados do navegador remove os registros locais.
+- Exportação JSON e persistência privada no Supabase após login. A demonstração usa armazenamento local. Confira o status de sincronização antes de sair; conflitos entre dispositivos exigem exportar/recarregar.
 - Sem gamificação ou notificações.
 
 ## Executar
@@ -39,6 +39,6 @@ Abra a URL HTTPS fornecida pelo GitHub no Safari e use Compartilhar → Adiciona
 
 ## Próximas etapas
 
-Autenticação, persistência por usuário, homologação privada da carga inicial, edição financeira, regras reais de fechamento/vencimento e integração de agenda com aprovação.
+Homologação privada da carga inicial, edição financeira, regras reais de fechamento/vencimento e integração de agenda com aprovação. Configuração das contas em [auth-setup.md](auth-setup.md).
 
-Nenhum dado pessoal do planejamento foi incluído nesta publicação. O saldo inicial e os lançamentos de exemplo são fictícios. Dados digitados pelo visitante ficam no navegador dele.
+Nenhum dado pessoal do planejamento foi incluído nesta publicação. Contas novas começam vazias. O saldo inicial e os lançamentos de exemplo são fictícios e exclusivos da demonstração. A configuração frontend contém somente a chave publicável, nunca credenciais administrativas.
