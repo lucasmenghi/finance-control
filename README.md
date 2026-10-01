@@ -42,3 +42,11 @@ Abra a URL HTTPS fornecida pelo GitHub no Safari e use Compartilhar → Adiciona
 Homologação privada da carga inicial, edição financeira, regras reais de fechamento/vencimento e integração de agenda com aprovação. Configuração das contas em [auth-setup.md](auth-setup.md).
 
 Nenhum dado pessoal do planejamento foi incluído nesta publicação. Contas novas começam vazias. O saldo inicial e os lançamentos de exemplo são fictícios e exclusivos da demonstração. A configuração frontend contém somente a chave publicável, nunca credenciais administrativas.
+
+## Planejamento e saúde
+
+Agenda semanal com horários, tarefas sem hora e rotinas recorrentes. A aba Saúde organiza treinos e refeições; treinos aparecem na mesma agenda. Tema claro/escuro segue a preferência do dispositivo e pode ser alternado.
+
+A importação privada usa arquivos `compasso-import-v1`, preserva registros existentes e rejeita conflitos financeiros. Arquivos pessoais não devem ser enviados para este repositório público. As contas fixas nas referências são orçamento, não pagamentos realizados.
+
+Validação: 22 testes de lógica financeira, autenticação, agenda, importação e handlers da interface. Execute `npm test` com Node.js.
