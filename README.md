@@ -49,4 +49,8 @@ Agenda semanal com horários, tarefas sem hora e rotinas recorrentes. A aba Saú
 
 A importação privada usa arquivos `compasso-import-v1`, preserva registros existentes e rejeita conflitos financeiros. Arquivos pessoais não devem ser enviados para este repositório público. As contas fixas nas referências são orçamento, não pagamentos realizados.
 
-Validação: 22 testes de lógica financeira, autenticação, agenda, importação e handlers da interface. Execute `npm test` com Node.js.
+Validação: 28 testes de lógica financeira, autenticação, agenda, importação e handlers da interface. Execute `npm test` com Node.js.
+
+## Compras
+
+Lista privada por categoria da casa, com item, quantidade livre, sugestões opcionais e marcação de comprado. A lista inteira é copiada em texto organizado para colar no WhatsApp. Quando o navegador não permite acessar a área de transferência, o texto fica disponível em uma caixa para cópia manual.

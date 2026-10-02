@@ -5,7 +5,7 @@
   "description": "Planejamento pessoal e finanças com simplicidade",
   "scripts": {
     "start": "node server.cjs",
-    "test": "node --test account.test.cjs finance.test.cjs planner.test.cjs ui.test.cjs"
+    "test": "node --test account.test.cjs finance.test.cjs planner.test.cjs ui.test.cjs shopping.test.cjs"
   },
   "engines": {
     "node": ">=20"
