@@ -1,0 +1,8 @@
+function openShoppingList(mode){const list=state.shoppingLists.find(l=>l.id===state.shoppingActiveList);listEditing={mode,id:list.id,owner:state};$('#shoppingListTitle').textContent={new:'Nova lista',rename:'Renomear lista',duplicate:'Duplicar lista'}[mode];$('#shoppingListName').value=mode==='new'?'':mode==='rename'?list.name:list.name+' (cópia)';$('#shoppingListError').textContent='';$('#shoppingListDialog').showModal();$('#shoppingListName').focus();}
+function bindShoppingLists(){
+ if($('#shoppingListSelect'))$('#shoppingListSelect').onchange=e=>{if(state.shoppingLists.some(l=>l.id===e.target.value)){state.shoppingActiveList=e.target.value;changed();}};
+ if($('#newShoppingList'))$('#newShoppingList').onclick=()=>openShoppingList('new');
+ if($('#renameShoppingList'))$('#renameShoppingList').onclick=()=>openShoppingList('rename');
+ if($('#duplicateShoppingList'))$('#duplicateShoppingList').onclick=()=>openShoppingList('duplicate');
+}
+$('#shoppingListForm').onsubmit=e=>{e.preventDefault();try{if(!listEditing||state!==listEditing.owner)return;const name=Workspace.listName(state,$('#shoppingListName').value,listEditing.mode==='rename'?listEditing.id:null);if(listEditing.mode==='rename')state.shoppingLists.find(l=>l.id===listEditing.id).name=name;else{const list={id:uid(),name};if(listEditing.mode==='duplicate')state.shopping.push(...state.shopping.filter(t=>t.listId===listEditing.id).map(t=>({...t,id:uid(),listId:list.id,bought:false})));state.shoppingLists.push(list);state.shoppingActiveList=list.id;}$('#shoppingListDialog').close();changed('Lista salva.');}catch(err){$('#shoppingListError').textContent=err.message;}};

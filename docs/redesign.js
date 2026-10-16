@@ -65,4 +65,4 @@ window.compassoReplaceState=data=>{state=data;normalize();$('#toast').style.disp
 window.compassoSetPrivate=privateMode=>{$('#export').textContent='Exportar dados';$('#importData').hidden=!privateMode;$('#mobileData').hidden=!privateMode;$('.demo').textContent=privateMode?'':'Demonstração';$('.demo').hidden=privateMode;};
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());render();
 
-CompassoAccount.init();
+
