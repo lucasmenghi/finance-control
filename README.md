@@ -49,7 +49,7 @@ Agenda semanal com horários, tarefas sem hora e rotinas recorrentes. A aba Saú
 
 A importação privada usa arquivos `compasso-import-v1`, preserva registros existentes e rejeita conflitos financeiros. Arquivos pessoais não devem ser enviados para este repositório público. As contas fixas nas referências são orçamento, não pagamentos realizados.
 
-Validação: 37 testes de lógica financeira, autenticação, agenda, importação e handlers da interface. Execute `npm test` com Node.js.
+Validação: 55 testes de lógica financeira, autenticação, agenda, importação e handlers da interface. Execute `npm test` com Node.js.
 
 ## Compras
 
@@ -58,3 +58,9 @@ Lista privada por categoria da casa, com item, quantidade livre, sugestões opci
 ## Rotina e listas salvas
 
 O backlog mostra tarefas da data escolhida, iniciando no dia atual. Saúde exibe uma rotina fixa de domingo a sábado; dados recorrentes existentes são migrados e os registros anteriores são preservados. Listas de compras podem ser criadas, renomeadas e duplicadas; a lista antiga passa a se chamar Minha lista. A agenda inicia em 6h–22h, aceita uma faixa personalizada e oferece a visão completa de 24 horas com indicação de eventos fora da faixa.
+
+## Metas pessoais e listas para outro usuário
+
+Backlog → Metas organiza o PDI com objetivo, prazo, indicador de sucesso e ações acompanháveis. As metas ficam privadas.
+
+Compras → Criar para outro usuário cria uma lista vazia com convite para um e-mail. Após o aceite, os dois editam apenas essa lista. Requer a ativação descrita em `shared-shopping-setup.md`.

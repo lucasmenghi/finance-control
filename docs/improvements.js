@@ -3,7 +3,7 @@ let backlogDate=today,weeklyHealthEdit=null,listEditing=null;
 const baseNormalize=normalize;
 normalize=function(){baseNormalize();Workspace.ensure(state,today);};
 const baseReplaceState=window.compassoReplaceState;
-window.compassoReplaceState=data=>{backlogDate=today;weeklyHealthEdit=null;listEditing=null;baseReplaceState(data);};
+window.compassoReplaceState=data=>{backlogDate=today;shoppingScope='private';pdiFilter='active';weeklyHealthEdit=null;listEditing=null;baseReplaceState(data);};
 function dailyTasks(){return P.occurrences(state,[backlogDate]);}
 oldBacklogPage=function(){const tasks=dailyTasks();return `<div class="toolbar wrap"><button data-backlog-date="today">Hoje</button><button data-backlog-date="-1" aria-label="Dia anterior">‹</button><input id="backlogDate" type="date" aria-label="Data das tarefas" value="${backlogDate}"><button data-backlog-date="1" aria-label="Próximo dia">›</button><button class="primary" id="addDailyTask">＋ Tarefa</button></div><section class="panel"><div class="section-head"><h2>${backlogDate===today?'Tarefas de hoje':fmt(backlogDate)}</h2><span class="muted">${tasks.filter(t=>t.done).length}/${tasks.length}</span></div>${tasks.map(t=>`<div class="task ${t.done?'done':''}"><button class="check" data-daily-done="${esc(t.id)}" data-source="${t.source}" aria-label="${t.done?'Reabrir':'Concluir'} ${esc(t.name)}">${t.done?'✓':''}</button><div class="task-body"><strong>${esc(t.name)}</strong><small>${esc(t.area)}${t.time?' · '+esc(t.time):''}</small></div><button data-daily-edit="${esc(t.id)}" data-source="${t.source}">Editar</button></div>`).join('')||'<p class="empty">Nenhuma tarefa neste dia.</p>'}</section>`;};
 healthOccurrences=days=>Workspace.healthEvents(state,days);
