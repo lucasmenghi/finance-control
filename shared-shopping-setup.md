@@ -1,17 +1,17 @@
-# Listas para outro usuário e metas pessoais
+# Listas por cópia e metas pessoais
 
-## Ativação de listas compartilhadas
+## Ativação
 
-No mesmo projeto Supabase, executar `supabase/003_shared_shopping.sql` e depois `supabase/003_shared_shopping_test.sql`. O teste deve terminar com PASS. Ele usa apenas fixtures e faz rollback ao final; não altera contas ou listas reais.
+A estrutura de envio usa os RPCs e a tabela protegida de `supabase/003_shared_shopping.sql`. O teste `supabase/003_shared_shopping_test.sql` valida acesso por destinatário, aceite, isolamento e revisões. A tabela funciona como envelope de entrega; não é o armazenamento das listas pessoais. Não é necessária outra migração para o modo cópia.
 
-Em Compras, escolher Criar para outro usuário e informar um nome e o e-mail usado pela pessoa no Compasso. A lista começa vazia; o criador pode preenchê-la por categoria. A outra pessoa encontra o convite em Compras → Com outro usuário e precisa aceitá-lo. O e-mail precisa estar confirmado.
+## Enviar e receber
 
-Só a lista criada é compartilhada. Antes do aceite, a outra pessoa vê apenas nome e convite. Depois, os dois podem editar e marcar os itens. Não há envio automático de e-mail. O criador pode cancelar um convite pendente. Itens removidos podem ser restaurados. As gravações conferem revisão para evitar que uma alteração sobrescreva outra silenciosamente.
+Em Compras, escolher Criar para outro usuário. Informar nome e e-mail e confirmar os itens da lista selecionada ou desmarcar a opção para enviar vazia. A lista original não é modificada. O destinatário acessa Enviadas e recebidas e escolhe Receber minha cópia. O e-mail precisa estar confirmado. Não há envio automático de e-mail.
 
-As tabelas de finanças pessoais, casal e workspaces não recebem novas políticas ou permissões. A nova tabela tem RLS e acesso apenas por RPC com checagem de identidade e vínculo por lista.
+A cópia é gravada no workspace privado do destinatário com novos IDs de itens e com confirmação do salvamento. Alterações futuras, renomeações e marcações não são sincronizadas entre as cópias. Receber novamente o mesmo envio abre a cópia existente, sem duplicar ou sobrescrever alterações. O app bloqueia o recebimento enquanto existem alterações pessoais pendentes de sincronização.
 
-## Metas pessoais — PDI
+Envios interrompidos podem ser concluídos. A recepção aguarda a gravação do conteúdo antes de importar, inclusive quando o aceite ocorre durante a preparação. O criador pode cancelar envios pendentes.
 
-Backlog → Metas permite cadastrar objetivo, área, prazo, situação, resultado esperado, plano de ação, contexto e revisão. As metas são armazenadas somente no workspace privado existente (`developmentPlans`); não é necessária migração para o PDI.
+## PDI privado
 
-O progresso acompanha as ações concluídas. A edição preserva o progresso de ações que continuam no plano e arquiva ações retiradas. Metas podem ser arquivadas e restauradas. Não se confundem com metas financeiras pessoais ou metas do casal.
+Backlog → Metas permite cadastrar objetivo, área, prazo, situação, resultado esperado, ações, contexto e revisão. As metas ficam somente em `developmentPlans` no workspace privado existente e não são incluídas no envio de listas. A edição preserva ações concluídas e arquiva ações removidas do plano. Metas podem ser arquivadas e restauradas.
