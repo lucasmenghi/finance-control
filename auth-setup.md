@@ -10,4 +10,9 @@ Cada conta usa uma linha própria no banco, protegida por RLS em SELECT/INSERT/U
 
 Tokens de sessão são gerenciados pelo SDK Supabase no navegador. Dados pessoais ficam em memória durante uso e no banco; não são copiados para o cache da demonstração. Ao sair, a interface e o estado são limpos. Falha de leitura não inicia conta vazia nem sobrescreve o banco. Conflitos de edição entre dispositivos bloqueiam novas gravações até exportar/recarregar, evitando perda silenciosa.
 
-Limites: sem recuperação de senha no app ainda; administração pelo painel. Revisão por documento inteiro, sem mesclagem automática. Uso simultâneo pode exigir exportar a versão local e recarregar a remota. Validação de isolamento precisa ser executada no projeto real após configuração.
+Limites: convites e recuperação de senha disponíveis na tela de entrada. Revisão por documento inteiro, sem mesclagem automática. Uso simultâneo pode exigir exportar a versão local e recarregar a remota. Validação de isolamento precisa ser executada no projeto real após configuração.
+
+
+## Convites e primeiro acesso
+
+Em Authentication → URL Configuration, use `https://lucasmenghi.github.io/finance-control/` como Site URL e Redirect URL. Mantenha novos cadastros públicos desativados. Aprovar um usuário significa enviar um convite em Authentication → Users → Add user → Send invitation. O destinatário abre o link e define a própria senha no Compasso. Se o convite já foi usado ou expirou, ele informa o e-mail na tela de entrada e usa “Esqueci minha senha / Primeiro acesso”. Nunca compartilhe senhas ou chaves secretas.
