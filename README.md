@@ -65,3 +65,11 @@ O backlog mostra tarefas da data escolhida, iniciando no dia atual. Saúde exibe
 Backlog → Metas organiza o PDI com objetivo, prazo, indicador de sucesso e ações acompanháveis. As metas ficam privadas.
 
 Compras → Criar para outro usuário envia uma cópia da lista selecionada ou uma lista vazia. O destinatário recebe em Minhas listas e as alterações posteriores são independentes. A ativação já existente é aproveitada. Consulte shared-shopping-setup.md.
+
+## Edição e planejamento financeiro
+
+Finanças permite alternar entre lista e tabela editável. Use Editar ou Mais detalhes para corrigir pagamento e parcelas. Compras com faturas já pagas exigem desfazer o registro de pagamento antes de alterar as parcelas. A gravação continua usando a sincronização privada existente.
+
+Contas fixas mensais têm valor, categoria, dia de vencimento, início, fim opcional e pausa. Gere os previstos de cada mês pelo botão; repetir a geração não duplica os lançamentos existentes. Meses curtos usam o último dia. Regras alteradas não reescrevem lançamentos já gerados.
+
+Custo de vida soma despesas do mês e parcelas vinculadas às faturas desse mês, sem duplicar pagamentos de faturas e sem investimentos. Compras antigas sem vínculo de parcelas precisam ser revisadas para entrar nesse cálculo. Investimentos mostra aportes realizados menos resgates, usando a categoria Investimentos; não estima rendimentos nem saldo de corretoras. O gráfico oferece detalhes por mouse, clique ou teclado, preservando as cores do aplicativo.
