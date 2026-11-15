@@ -91,3 +91,9 @@ Custo de vida pode ser personalizado por categoria e com exceções por lançame
 Fixos aceita despesas e recebimentos mensais, como salário e benefícios. A geração cria previstos, respeita início, fim e pausa e não duplica lançamentos já criados. Valores recebidos continuam exigindo confirmação.
 
 Investimentos acompanha saldo inicial investido, aportes, resgates, rendimentos e perdas em reais. Patrimônio e rendimentos não são adicionados ao caixa. Por padrão, registros novos só alteram esse indicador; em aportes e resgates, o usuário pode marcar explicitamente a movimentação do dinheiro disponível. Movimentações antigas realizadas da categoria Investimentos são preservadas e integram o patrimônio acompanhado.
+
+## Identidade e ícone do celular
+
+A proposta Direção combina um C com uma agulha de bússola em verde-menta sobre verde escuro. SVG editável em docs/brand/direction.svg. PNGs opacos de 32, 180, 192 e 512 px servem favicon, Safari/iPhone e manifesto Android; o símbolo fica dentro da área segura para recortes maskable. A marca anterior permanece em docs/icon.svg.
+
+Veja as três propostas em marca.html. Para adicionar o aplicativo à tela inicial, abra a página principal. Atalhos instalados antes da atualização podem exigir que o usuário adicione novamente para atualizar o ícone. Não há instalação automática nem promessa de uso offline.
