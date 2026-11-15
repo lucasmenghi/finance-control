@@ -81,3 +81,13 @@ A tela prioriza contas e faturas do mês, com navegação entre meses, atalhos p
 O formulário mostra o efeito no caixa e o mês de cobrança antes de salvar. Novos lançamentos seguem o mês selecionado; o mês da fatura acompanha a data até ser escolhido manualmente. Uma fatura anterior à data exige confirmação explícita. A tabela permite mudar diretamente o mês de uma compra de parcela única, recalculando as faturas de origem e destino. Compras parceladas continuam editáveis pelo formulário completo. Valores com milhares em português, como 1.234,56, são aceitos.
 
 Ao cadastrar conta fixa, uma opção cria o previsto do mês selecionado junto com a regra; pagamentos continuam dependendo de confirmação do usuário. Os gráficos interativos, cards de custo de vida e investimentos, metas, referências anteriores e resumo do casal permanecem disponíveis.
+
+## Finanças pessoais: simplificar e personalizar
+
+Finanças se divide em Mês, Fixos e Investimentos. A tela mensal destaca três indicadores e recolhe faturas, gráficos e explicações. Meu caixa é a sobra após receitas previstas e contas em aberto do mês, podendo ser negativo; recebimentos e pagamentos de meses posteriores não entram antes da hora. O gráfico continua mostrando movimentações realizadas, separado da projeção mensal.
+
+Custo de vida pode ser personalizado por categoria e com exceções por lançamento. Essas escolhas só alteram esse indicador. Compras no cartão entram por suas parcelas vinculadas ao mês da fatura.
+
+Fixos aceita despesas e recebimentos mensais, como salário e benefícios. A geração cria previstos, respeita início, fim e pausa e não duplica lançamentos já criados. Valores recebidos continuam exigindo confirmação.
+
+Investimentos acompanha saldo inicial investido, aportes, resgates, rendimentos e perdas em reais. Patrimônio e rendimentos não são adicionados ao caixa. Por padrão, registros novos só alteram esse indicador; em aportes e resgates, o usuário pode marcar explicitamente a movimentação do dinheiro disponível. Movimentações antigas realizadas da categoria Investimentos são preservadas e integram o patrimônio acompanhado.
