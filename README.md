@@ -73,3 +73,11 @@ Finanças permite alternar entre lista e tabela editável. Use Editar ou Mais de
 Contas fixas mensais têm valor, categoria, dia de vencimento, início, fim opcional e pausa. Gere os previstos de cada mês pelo botão; repetir a geração não duplica os lançamentos existentes. Meses curtos usam o último dia. Regras alteradas não reescrevem lançamentos já gerados.
 
 Custo de vida soma despesas do mês e parcelas vinculadas às faturas desse mês, sem duplicar pagamentos de faturas e sem investimentos. Compras antigas sem vínculo de parcelas precisam ser revisadas para entrar nesse cálculo. Investimentos mostra aportes realizados menos resgates, usando a categoria Investimentos; não estima rendimentos nem saldo de corretoras. O gráfico oferece detalhes por mouse, clique ou teclado, preservando as cores do aplicativo.
+
+## Usabilidade das finanças
+
+A tela prioriza contas e faturas do mês, com navegação entre meses, atalhos para despesa, receita e valor fechado de fatura. A pagar permite abrir a composição exata; cada fatura detalha os lançamentos vinculados, inclusive registros com datas de outros meses. A lista usa por padrão o mês da fatura para compras no cartão, com busca, filtro por situação e opção de consultar pela data ou todos os meses.
+
+O formulário mostra o efeito no caixa e o mês de cobrança antes de salvar. Novos lançamentos seguem o mês selecionado; o mês da fatura acompanha a data até ser escolhido manualmente. Uma fatura anterior à data exige confirmação explícita. A tabela permite mudar diretamente o mês de uma compra de parcela única, recalculando as faturas de origem e destino. Compras parceladas continuam editáveis pelo formulário completo. Valores com milhares em português, como 1.234,56, são aceitos.
+
+Ao cadastrar conta fixa, uma opção cria o previsto do mês selecionado junto com a regra; pagamentos continuam dependendo de confirmação do usuário. Os gráficos interativos, cards de custo de vida e investimentos, metas, referências anteriores e resumo do casal permanecem disponíveis.
