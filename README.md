@@ -97,3 +97,5 @@ Investimentos acompanha saldo inicial investido, aportes, resgates, rendimentos 
 A proposta Direção combina um C com uma agulha de bússola em verde-menta sobre verde escuro. SVG editável em docs/brand/direction.svg. PNGs opacos de 32, 180, 192 e 512 px servem favicon, Safari/iPhone e manifesto Android; o símbolo fica dentro da área segura para recortes maskable. A marca anterior permanece em docs/icon.svg.
 
 Veja as três propostas em marca.html. Para adicionar o aplicativo à tela inicial, abra a página principal. Atalhos instalados antes da atualização podem exigir que o usuário adicione novamente para atualizar o ícone. Não há instalação automática nem promessa de uso offline.
+
+Checklist de contas: uma única lista pessoal em Finanças, compartilhada entre as abas e sem reinício por mês. As nove marcações ficam no campo financeChecklist do workspace privado e não modificam lançamentos, faturas, situação de pagamento ou cálculos. Cada item pode ser marcado e desmarcado manualmente.
